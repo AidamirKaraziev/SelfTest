@@ -3,7 +3,7 @@ import asyncio
 import socket
 
 import speedtest
-from config import MIN_DOWNLOAD, MIN_UPLOAD
+from config import MIN_DOWNLOAD, MIN_UPLOAD, SLEEP_TIME
 
 
 async def get_local_ip():
@@ -32,16 +32,17 @@ async def check_speed():
         print(ds)
         us = st.upload()
         print(us)
-        if ds < MIN_DOWNLOAD or us < MIN_UPLOAD:
-            return f"""На сервере: {await get_local_ip()}
-Загрузка должна быть: {await humansize(MIN_DOWNLOAD)}
-Отправка должна быть: {await humansize(MIN_UPLOAD)}
+        if int(ds) < int(MIN_DOWNLOAD) or int(us) < int(MIN_UPLOAD):
+            return f"""
+На сервере: {await get_local_ip()}
+Загрузка должна быть: {await humansize(int(MIN_DOWNLOAD))}
+Отправка должна быть: {await humansize(int(MIN_UPLOAD))}
 
 Загрузка: {await humansize(ds)}
 Отправка: {await humansize(us)}""", 0
     except Exception as ex:
         print(f"Не вышло     {ex}")
-        sleep(10)
+        sleep(int(SLEEP_TIME))
         return None, -1
         # raise f"{ex}"
     # if ds < MIN_DOWNLOAD and us < MIN_UPLOAD:
