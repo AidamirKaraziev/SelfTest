@@ -43,7 +43,7 @@ async def check_speed():
     except Exception as ex:
         print(f"Не вышло     {ex}")
         sleep(int(SLEEP_TIME))
-        return None, -1
+        return "None", -1
         # raise f"{ex}"
     # if ds < MIN_DOWNLOAD and us < MIN_UPLOAD:
     #     return f"На сервере: {await get_local_ip()} - недостаточная скорость загрузки {await humansize(ds)}" \
