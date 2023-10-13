@@ -15,8 +15,8 @@ async def main():
     while True:
         text, code = await check_speed()
         if code == 0:
+            await send_message(CHANNEL_ID, text)
             break
-    await send_message(CHANNEL_ID, text)
 
 
 if __name__ == '__main__':
