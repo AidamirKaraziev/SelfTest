@@ -30,12 +30,11 @@ async def humansize(nbytes):
 async def check_speed():
     print("START SpeedTest")
     try:
-        st = speedtest.Speedtest()
+        st = speedtest.Speedtest(secure=True)  # локально secure - не работает. онлайн надо использовать
+        # st = speedtest.Speedtest()
         print("JOB")
         ds = st.download()
-        print(ds)
         us = st.upload()
-        print(us)
         if int(ds) < int(MIN_DOWNLOAD) or int(us) < int(MIN_UPLOAD):
             return f"""
 На сервере: {await get_external_ip()}
@@ -50,8 +49,3 @@ async def check_speed():
         print(f"Не вышло     {ex}")
         sleep(int(SLEEP_TIME))
         return ex, -1
-
-
-
-# if __name__ == '__main__':
-#     asyncio.run(check_speed())

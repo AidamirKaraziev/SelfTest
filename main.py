@@ -16,10 +16,10 @@ async def main():
         text, code = await check_speed()
         if code == 0:
             await send_message(CHANNEL_ID, text)
-            # break
+            break
         if code == 1:
             print("скорость отличная!", text)
-            # break
+            break
 
 if __name__ == '__main__':
     asyncio.run(main())
