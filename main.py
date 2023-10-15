@@ -17,7 +17,8 @@ async def main():
         if code == 0:
             await send_message(CHANNEL_ID, text)
             break
-
+        if code == 1:
+            break
 
 if __name__ == '__main__':
     asyncio.run(main())
