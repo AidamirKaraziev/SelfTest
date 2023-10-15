@@ -44,11 +44,14 @@ async def check_speed():
 
 Загрузка: {await humansize(ds)}
 Отправка: {await humansize(us)}""", 0
+        else:
+            return None, 1
     except Exception as ex:
         print(f"Не вышло     {ex}")
         sleep(int(SLEEP_TIME))
         return ex, -1
-    return "", -1
+
+
 
 # if __name__ == '__main__':
 #     asyncio.run(check_speed())
