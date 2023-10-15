@@ -18,6 +18,7 @@ async def main():
             await send_message(CHANNEL_ID, text)
             break
         if code == 1:
+            print("скорость отличная!", text)
             break
 
 if __name__ == '__main__':
