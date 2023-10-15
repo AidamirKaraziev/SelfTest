@@ -1,16 +1,20 @@
 from time import sleep
 import asyncio
-import socket
 
+import requests
 import speedtest
+
 from config import MIN_DOWNLOAD, MIN_UPLOAD, SLEEP_TIME
 
 
-async def get_local_ip():
-    hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
-
-    return local_ip
+def get_external_ip():
+    try:
+        response = requests.get('https://api.ipify.org/?format=json')
+        data = response.json()
+        external_ip = data['ip']
+        return external_ip
+    except Exception:
+        return None
 
 
 async def humansize(nbytes):
@@ -34,7 +38,7 @@ async def check_speed():
         print(us)
         if int(ds) < int(MIN_DOWNLOAD) or int(us) < int(MIN_UPLOAD):
             return f"""
-На сервере: {await get_local_ip()}
+На сервере: {get_external_ip()}
 Загрузка должна быть: {await humansize(int(MIN_DOWNLOAD))}
 Отправка должна быть: {await humansize(int(MIN_UPLOAD))}
 
@@ -43,16 +47,7 @@ async def check_speed():
     except Exception as ex:
         print(f"Не вышло     {ex}")
         sleep(int(SLEEP_TIME))
-        return "None", -1
-        # raise f"{ex}"
-    # if ds < MIN_DOWNLOAD and us < MIN_UPLOAD:
-    #     return f"На сервере: {await get_local_ip()} - недостаточная скорость загрузки {await humansize(ds)}" \
-    #            f" и отправки {await humansize(us)}"
-    # elif ds < MIN_DOWNLOAD:
-    #     return f"На сервере: {await get_local_ip()} - недостаточная скорость загрузки {await humansize(ds)}"
-    # elif us < MIN_UPLOAD:
-    #     return f"На сервере: {await get_local_ip()} - недостаточная скорость отправки {await humansize(us)}"
-    # else:
+        return ex, -1
 
 
 if __name__ == '__main__':
