@@ -27,6 +27,7 @@ async def humansize(nbytes):
     return '%s %s' % (f, suffixes[i])
 
 
+# TODO сделать вывод в процентном соотношении
 async def check_speed():
     print("START SpeedTest")
     try:
