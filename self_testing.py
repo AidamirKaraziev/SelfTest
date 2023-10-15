@@ -7,7 +7,7 @@ import speedtest
 from config import MIN_DOWNLOAD, MIN_UPLOAD, SLEEP_TIME
 
 
-def get_external_ip():
+async def get_external_ip():
     try:
         response = requests.get('https://api.ipify.org/?format=json')
         data = response.json()
@@ -38,7 +38,7 @@ async def check_speed():
         print(us)
         if int(ds) < int(MIN_DOWNLOAD) or int(us) < int(MIN_UPLOAD):
             return f"""
-На сервере: {get_external_ip()}
+На сервере: {await get_external_ip()}
 Загрузка должна быть: {await humansize(int(MIN_DOWNLOAD))}
 Отправка должна быть: {await humansize(int(MIN_UPLOAD))}
 
@@ -48,7 +48,7 @@ async def check_speed():
         print(f"Не вышло     {ex}")
         sleep(int(SLEEP_TIME))
         return ex, -1
+    return "", -1
 
-
-if __name__ == '__main__':
-    asyncio.run(check_speed())
+# if __name__ == '__main__':
+#     asyncio.run(check_speed())
