@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MIN_DOWNLOAD = os.environ.get("MIN_DOWNLOAD")
-MIN_UPLOAD = os.environ.get("MIN_UPLOAD")
+PERFECT_DOWNLOAD = os.environ.get("PERFECT_DOWNLOAD")
+PERFECT_UPLOAD = os.environ.get("PERFECT_UPLOAD")
 PING = os.environ.get("PING")
 
 # telegram
