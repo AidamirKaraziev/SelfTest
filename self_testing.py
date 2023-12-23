@@ -4,7 +4,7 @@ import asyncio
 import requests
 import speedtest
 
-from config import MIN_DOWNLOAD, MIN_UPLOAD, SLEEP_TIME
+from config import SLEEP_TIME, PERFECT_DOWNLOAD, PERFECT_UPLOAD
 
 
 async def get_external_ip():
@@ -27,23 +27,44 @@ async def humansize(nbytes):
     return '%s %s' % (f, suffixes[i])
 
 
-# TODO сделать вывод в процентном соотношении
 async def check_speed():
+    sum_ds = 0
+    sum_us = 0
+    norm_download = int(PERFECT_DOWNLOAD) * 0.5
+    norm_upload = int(PERFECT_UPLOAD) * 0.5
+
     print("START SpeedTest")
     try:
-        st = speedtest.Speedtest(secure=True)  # локально secure - не работает. онлайн надо использовать
-        # st = speedtest.Speedtest()
-        print("JOB")
-        ds = st.download()
-        us = st.upload()
-        if int(ds) < int(MIN_DOWNLOAD) or int(us) < int(MIN_UPLOAD):
+        """
+        5 раз замерить
+        если 1 раз получаем хорошую скорость - то заканчиваем тест.
+        если нет - то отправка среднеарифметической скорости.
+        """
+        n = 5
+        for i in range(n):
+            st = speedtest.Speedtest(secure=True)  # локально secure - не работает. онлайн надо использовать
+            # st = speedtest.Speedtest()
+            print("JOB")
+            ds = st.download()
+            # print("fact ds:", await humansize(int(ds)))
+            # print("norm ds:", await humansize(int(norm_download)))
+            us = st.upload()
+            if ds >= norm_download and us >= norm_upload:
+                return None, 1
+            else:
+                sum_ds += ds
+                sum_us += us
+                pass
+        average_ds = sum_ds / n
+        average_us = sum_us / n
+        if average_ds < norm_download or average_us < norm_upload:
             return f"""
 На сервере: {await get_external_ip()}
-Загрузка должна быть: {await humansize(int(MIN_DOWNLOAD))}
-Отправка должна быть: {await humansize(int(MIN_UPLOAD))}
-
-Загрузка: {await humansize(ds)}
-Отправка: {await humansize(us)}""", 0
+DS: {await humansize(average_ds)}
+US: {await humansize(average_us)}
+Normal DS: {await humansize(int(norm_download))}
+Normal US: {await humansize(int(norm_upload))}
+""", 0
         else:
             return None, 1
     except Exception as ex:
